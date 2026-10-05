@@ -1,3 +1,7 @@
+import os
+from pathlib import Path
+
+import joblib
 import pandas as pd
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
@@ -5,6 +9,11 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
+
+# Paths: this file is in src/function/, so the project root is two folders up
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DATA = PROJECT_ROOT / "data" / "raw"
+MODELS = PROJECT_ROOT / "models"
 
 
 def build_knn(features, k=10):
@@ -27,9 +36,9 @@ def build_knn(features, k=10):
 
 
 def run_knn(csv_path, target, drop_columns=None, k=5, k_values=(1, 3, 5, 7, 9, 11, 15, 21)):
-    """Load a dataset, find the best k, train kNN and print the results."""
+    """Load a dataset, train kNN and print the results."""
     print("=" * 60)
-    print(f"Dataset: {csv_path}")
+    print(f"Dataset: {Path(csv_path).name}")
     print("=" * 60)
 
     df = pd.read_csv(csv_path)
@@ -52,9 +61,8 @@ def run_knn(csv_path, target, drop_columns=None, k=5, k_values=(1, 3, 5, 7, 9, 1
         features, classes, test_size=0.2, random_state=10, stratify=classes
     )
 
-    # Try several k values with 5-fold cross-validation on the TRAINING data only.
-    # (Choosing k by looking at the test set would be cheating.)
     # --- Best k search (temporarily disabled) ---
+    # Tries several k values with 5-fold cross-validation on the TRAINING data only.
     # print("Choosing k (5-fold cross-validation, macro F1):")
     # best_k, best_score = None, -1
     # for k_try in k_values:
@@ -72,7 +80,7 @@ def run_knn(csv_path, target, drop_columns=None, k=5, k_values=(1, 3, 5, 7, 9, 1
     print(f"Using k = {best_k}")
     print()
 
-    # Train the final model with the best k and test it once on the test set
+    # Train the model and test it on the test set
     knn = build_knn(features_train, best_k)
     knn.fit(features_train, classes_train)
     predictions = knn.predict(features_test)
@@ -91,16 +99,11 @@ def run_knn(csv_path, target, drop_columns=None, k=5, k_values=(1, 3, 5, 7, 9, 1
 
 if __name__ == "__main__":
     # Dataset 1: mixed numerical + categorical features
-    run_knn("data/raw/weather_type.csv", target="Weather Type")
+    run_knn(DATA / "weather_classification_data.csv", target="Weather Type", k=5)
 
-    # Dataset 2: numerical features only (drop 'date', it is not a feature)
-    run_knn("data/raw/seattle_weather.csv", target="weather", drop_columns=["date"])
-
-
-
-import joblib
-import os
-
-model = run_knn(DATA / "seattle_weather.csv", target="weather", drop_columns=["date"], k=5)
-os.makedirs("models", exist_ok=True)
-joblib.dump(model, "models/seattle_knn.joblib")    
+    # Dataset 2: numerical features only, and save this model for the website
+    seattle_model = run_knn(DATA / "seattle-weather.csv", target="weather",
+                            drop_columns=["date"], k=5)
+    os.makedirs(MODELS, exist_ok=True)
+    joblib.dump(seattle_model, MODELS / "seattle_knn.joblib")
+    print("Model saved to", MODELS / "seattle_knn.joblib")
