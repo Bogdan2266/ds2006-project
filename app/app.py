@@ -4,6 +4,8 @@ import joblib
 import pandas as pd
 import streamlit as st
 
+st.set_page_config(page_title="Weather Predictor", page_icon="🌦️")
+
 # Load the trained model (created by running main.py)
 MODEL_PATH = Path(__file__).parent.parent / "models" / "seattle_knn.joblib"
 model = joblib.load(MODEL_PATH)
