@@ -37,8 +37,8 @@ st.write("For both datasets, 80% of the rows are used for training and 20% for t
 
 st.header("Authors")
 # Change these lines to your own names
-st.write("- **Bogdan** – Halmstad University")
-st.write("- **Teammate name** – Halmstad University")
+st.write("- **Bogdan Gertsiuk** – Halmstad University")
+st.write("- **Axel Lund** – Halmstad University")
 st.caption("Course project for DS2006 Introduction to Data Science.")
 
 st.divider()
