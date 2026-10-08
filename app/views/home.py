@@ -1,14 +1,18 @@
-"""Starting page: weather photos and two buttons (About / Go to the app)."""
+"""Starting page: weather photos and two buttons (About / Start the lab)."""
 from pathlib import Path
 
 import streamlit as st
 
 IMAGES = Path(__file__).resolve().parents[1] / "images"
 
-st.title("🌦️ Weather Predictor")
+st.title("🌦️ Weather Lab")
 st.write(
-    "Predict the type of weather from a day's measurements, using k-Nearest Neighbors "
-    "trained on two datasets: real Seattle weather and a synthetic weather dataset."
+    "A mini data science laboratory for weather classification with k-Nearest Neighbors. "
+    "Load a dataset, design and compare k-NN experiments, save the results, and use a "
+    "trained model to classify new days."
+)
+st.markdown(
+    "**Steps:** 📂 1. Load data → ⚙️ 2. Experiments → 📊 3. Results → 🌦️ 4. Predict"
 )
 
 # Photos: put your own pictures in app/images/ with these names.
@@ -39,5 +43,5 @@ with left:
     if st.button("ℹ️ About the app", width="stretch"):
         st.switch_page("views/about.py")
 with right:
-    if st.button("🚀 Go to the app", type="primary", width="stretch"):
-        st.switch_page("views/choose_k.py")
+    if st.button("🚀 Start the lab", type="primary", width="stretch"):
+        st.switch_page("views/load_data.py")

@@ -7,8 +7,11 @@ st.title("ℹ️ About this app")
 
 st.header("What does it do?")
 st.write(
-    "You enter the weather measurements of one day and the app predicts the type of weather. "
-    "There are two separate models, one for each dataset (see below)."
+    "This is a mini data science laboratory. You can load one of two weather datasets and "
+    "inspect it, choose how models are evaluated (train/test split or cross-validation, "
+    "stratified or not), test several values of k at once, compare accuracy, precision, "
+    "recall and F1-score, look at confusion matrices, save the results, and classify new "
+    "days with a trained model."
 )
 
 st.header("How does it work?")
@@ -35,7 +38,6 @@ st.write(
     "visibility) and categorical (cloud cover, season, location type). "
     "Classes: **Sunny, Cloudy, Rainy, Snowy**."
 )
-st.write("For both datasets, 80% of the rows are used for training and 20% for testing.")
 
 st.divider()
 st.markdown("<h2 style='text-align:center'>Authors</h2>", unsafe_allow_html=True)
@@ -47,13 +49,13 @@ AUTHORS = [
         "name": "Bohdan Gertsiuk",
         "photo": "bohdan.jpg",
         "email": "gertsiukbogdan@gmail.com",
-        "github": "https://github.com/Bogdan2266",
+        "github": "Bogdan2266",
     },
     {
         "name": "Axel Lundholm",
         "photo": "axel.jpg",
-        "email": "axel@example.com",       
-        "github": "https://github.com/Axel0lexA",  
+        "email": "axel@example.com",       # change to Axel's email
+        "github": "axel-github-username",  # change to Axel's GitHub username
     },
 ]
 
