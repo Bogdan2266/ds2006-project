@@ -1,4 +1,6 @@
 """Description of the app and info about the authors."""
+from pathlib import Path
+
 import streamlit as st
 
 st.title("ℹ️ About this app")
@@ -35,11 +37,55 @@ st.write(
 )
 st.write("For both datasets, 80% of the rows are used for training and 20% for testing.")
 
-st.header("Authors")
-# Change these lines to your own names
-st.write("- **Bogdan Gertsiuk** – Halmstad University")
-st.write("- **Axel Lund** – Halmstad University")
-st.caption("Course project for DS2006 Introduction to Data Science.")
+st.divider()
+st.markdown("<h2 style='text-align:center'>Authors</h2>", unsafe_allow_html=True)
+
+# Photos go in app/images/ (bohdan.jpg, axel.jpg). A placeholder is shown if missing.
+IMAGES = Path(__file__).resolve().parents[1] / "images"
+AUTHORS = [
+    {
+        "name": "Bohdan Gertsiuk",
+        "photo": "bohdan.jpg",
+        "email": "gertsiukbogdan@gmail.com",
+        "github": "Bogdan2266",
+    },
+    {
+        "name": "Axel Lundholm",
+        "photo": "axel.jpg",
+        "email": "axel@example.com",       # change to Axel's email
+        "github": "axel-github-username",  # change to Axel's GitHub username
+    },
+]
+
+columns = st.columns(len(AUTHORS), gap="large")
+for column, author in zip(columns, AUTHORS):
+    with column:
+        st.markdown(f"<h3 style='text-align:center'>{author['name']}</h3>", unsafe_allow_html=True)
+
+        photo = IMAGES / author["photo"]
+        if photo.exists():
+            st.image(str(photo), width="stretch")
+        else:
+            st.markdown(
+                "<div style='aspect-ratio:1;border:2px dashed #999;border-radius:12px;"
+                "display:flex;align-items:center;justify-content:center;font-size:64px'>👤</div>",
+                unsafe_allow_html=True,
+            )
+
+        github_url = f"https://github.com/{author['github']}"
+        st.markdown(
+            f"<p style='text-align:center'>✉️ <a href='mailto:{author['email']}'>{author['email']}</a><br>"
+            f"🐙 <a href='{github_url}' target='_blank'>github.com/{author['github']}</a></p>",
+            unsafe_allow_html=True,
+        )
+
+# Info about us (change this text)
+st.markdown(
+    "<p style='text-align:center;margin-top:24px'>We are students at <b>Halmstad University</b>. "
+    "This app is our course project for <b>DS2006 Introduction to Data Science</b>, "
+    "where we explore weather data and classify it with k-Nearest Neighbors.</p>",
+    unsafe_allow_html=True,
+)
 
 st.divider()
 if st.button("⬅️ Back to start"):
