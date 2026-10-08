@@ -8,6 +8,9 @@ st.write(
     "**k** is the number of neighbors (most similar days) the model looks at. "
     "Small k follows the training data very closely (can overfit); "
     "large k gives smoother, more general answers (can underfit)."
+    "According to our tests, the best k is around 5–10 for both datasets."
+    "We recommend trying a few values and seeing how the accuracy changes."
+    "The best results are obtained with k=5 for the Seattle dataset and k=10 for the weather prediction dataset."
 )
 
 # Remember the choice between pages with st.session_state
