@@ -47,13 +47,13 @@ AUTHORS = [
         "name": "Bohdan Gertsiuk",
         "photo": "bohdan.jpg",
         "email": "gertsiukbogdan@gmail.com",
-        "github": "Bogdan2266",
+        "github": "https://github.com/Bogdan2266",
     },
     {
         "name": "Axel Lundholm",
         "photo": "axel.jpg",
-        "email": "axel@example.com",       # change to Axel's email
-        "github": "axel-github-username",  # change to Axel's GitHub username
+        "email": "axel@example.com",       
+        "github": "https://github.com/Axel0lexA",  
     },
 ]
 
