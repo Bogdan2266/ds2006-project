@@ -11,7 +11,7 @@ Course project for **DS2006 Introduction to Data Science** at Halmstad Universit
 
 ![Home Page](docs/screenshots/home.png)
 ![Prediction Page](docs/screenshots/predict.png)
-![About Page](docs/screenshots/about.png)
+
 
 ## ✨ Key Features
 
