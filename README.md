@@ -75,4 +75,4 @@ streamlit run app/app.py
 ## 👥 Authors
 
 - **Bohdan Gertsiuk** – [GitHub](https://github.com/Bogdan2266)
-- **Axel Lundholm** – [GitHub](https://github.com/axel-github-username)
+- **Axel Lundholm** – [GitHub](https://github.com/Axel0lexA)
