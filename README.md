@@ -1,7 +1,7 @@
-# Weather Predictor 🌦️
+# Weather Lab 🌦️
 
-Machine learning web app built with **Python**, **scikit-learn** and **Streamlit**.  
-It predicts the type of weather from a day's measurements using **k-Nearest Neighbors (kNN)**, trained on two different weather datasets.  
+A **Mini Data Science Laboratory** built with **Python**, **scikit-learn** and **Streamlit**.  
+Load a weather dataset, design and compare **k-Nearest Neighbors (k-NN)** experiments, save the results, and use a trained model to classify new, unseen days.  
 Course project for **DS2006 Introduction to Data Science** at Halmstad University.
 
 🔗 **Live demo:** [weather-predict on Azure](https://weather-predict-degsfwa7fgcjhpeu.norwayeast-01.azurewebsites.net)  
@@ -9,40 +9,43 @@ Course project for **DS2006 Introduction to Data Science** at Halmstad Universit
 
 ## 📸 Screenshots
 
-![Home Page](docs/screenshots/home.png)
-![Prediction Page](docs/screenshots/predict.png)
-
+![Load Data](docs/screenshots/load.png)
+![Results](docs/screenshots/results.png)
+![Classify](docs/screenshots/classify.png)
 
 ## ✨ Key Features
 
-- Two classification models side by side: real Seattle weather and synthetic weather data
-- Choose the number of neighbors **k** and see the test accuracy update instantly
-- Inputs are generated automatically: sliders for numerical features, dropdowns for categorical ones
-- Prediction with an icon and a chart showing how the k nearest neighbors voted
-- Multipage interface: Home, About, Choose k and Predict
-- Automatic deployment to Azure on every push to `main`
+- **Load & inspect** a dataset: first 10 rows, size, feature names and types, class counts, descriptive statistics
+- **Data preparation**: scaling for numerical features, one-hot encoding for categorical features (also applied to new examples)
+- **Evaluation strategies**: train/test split (custom percentages) or X-fold cross-validation, stratified or non-stratified
+- **Several k-NN experiments at once** with the same evaluation setup, so results are fairly compared
+- **Metrics** for every k: accuracy, precision, recall and F1-score (macro average)
+- **Confusion matrix** for any experiment
+- **Save results** to a CSV file with a custom name
+- **Classify new examples** with a chosen trained model: enter values manually or upload a CSV file
+- **Input validation** with clear messages instead of crashes
 
 ## 📊 Datasets
 
 | Dataset | Type | Inputs | Classes |
 |---|---|---|---|
 | [Seattle Weather](https://www.kaggle.com/datasets/ananthr1/weather-prediction) | Real data, Seattle 2012–2015 | Numerical only: precipitation, max/min temperature, wind | 5: sun, rain, drizzle, snow, fog |
-| [Weather Type Classification](https://www.kaggle.com/datasets/nikhil7280/weather-type-classification) | Synthetic data | Numerical + categorical (cloud cover, season, location) | 4: Sunny, Cloudy, Rainy, Snowy |
+| [Weather Type Classification](https://www.kaggle.com/datasets/nikhil7280/weather-type-classification) | Synthetic data | 7 numerical + 3 categorical (cloud cover, season, location) | 4: Sunny, Cloudy, Rainy, Snowy |
 
 ## 🛠 Tech Stack
 
 - **Language:** Python
-- **Machine learning:** scikit-learn (kNN, Pipeline, StandardScaler, OneHotEncoder)
+- **Machine learning:** scikit-learn (KNeighborsClassifier, Pipeline, ColumnTransformer, StandardScaler, OneHotEncoder, KFold / StratifiedKFold)
 - **Data:** pandas
 - **Web app:** Streamlit
 - **Deployment:** Azure App Service, GitHub Actions (CI/CD)
 
-## 🧠 How It Works
+## 🧭 How to Use
 
-1. The data is split into **80% training** and **20% test** data (stratified, `random_state=10`).
-2. Numerical features are scaled with **StandardScaler**; categorical features are converted with **OneHotEncoder**.
-3. **kNN** finds the *k* most similar days in the training data and predicts the most common weather type among them.
-4. The model is trained inside the app for the chosen k and cached, so each k is trained only once.
+1. **Load data** – choose a dataset and inspect it.
+2. **Experiments** – choose train/test split or cross-validation, stratified or not, and the k values to test.
+3. **Results** – compare the metrics, inspect confusion matrices and save the results.
+4. **Predict** – pick a trained model and classify a new example (manually or from a CSV file).
 
 ## 📁 Project Structure
 
@@ -50,12 +53,11 @@ Course project for **DS2006 Introduction to Data Science** at Halmstad Universit
 ds2006-project/
 ├── app/
 │   ├── app.py            # entry point: page settings and navigation
-│   ├── model_utils.py    # dataset settings, loading data, training kNN
-│   ├── views/            # home, about, choose_k, predict pages
+│   ├── lab.py            # all data science logic (no Streamlit code)
+│   ├── views/            # pages: home, load_data, experiments, results, classify, about
 │   └── images/           # photos used in the app
 ├── data/raw/             # original CSV files
-├── src/main.py           # kNN experiments and evaluation
-├── notebooks/            # data exploration
+├── docs/screenshots/     # images for this README
 └── requirements.txt
 ```
 
@@ -73,4 +75,4 @@ streamlit run app/app.py
 ## 👥 Authors
 
 - **Bohdan Gertsiuk** – [GitHub](https://github.com/Bogdan2266)
-- **Axel Lundholm** – [GitHub](https://github.com/Axel0lexA)
+- **Axel Lundholm** – [GitHub](https://github.com/axel-github-username)
