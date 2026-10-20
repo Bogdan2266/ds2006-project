@@ -1,8 +1,4 @@
-"""Core logic of the Mini Data Science Laboratory.
-
-This file has NO Streamlit code: only pandas and scikit-learn.
-The pages in app/views/ call these functions and show the results.
-Keeping the logic here makes it easy to test and to explain.
+"""Logic of the project: load datasets, prepare data, train and evaluate kNN models, classify new examples.
 """
 from pathlib import Path
 
@@ -20,9 +16,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA = PROJECT_ROOT / "data" / "raw"
 RANDOM_STATE = 10  # same random_state everywhere, so results can be repeated
 
-# ---------------------------------------------------------------------------
-# 1. Datasets supported by the laboratory
-# ---------------------------------------------------------------------------
+### supported datasets: file name, description, target column, input features (numerical and categorical), and nicer labels for the app
 DATASETS = {
     "Seattle Weather (numerical)": {
         "file": "seattle-weather.csv",
@@ -85,10 +79,7 @@ def feature_types(df, info):
                      "unique values": df[column].nunique()})
     return pd.DataFrame(rows)
 
-
-# ---------------------------------------------------------------------------
-# 2. Data preparation + model
-# ---------------------------------------------------------------------------
+## Data preparation + kNN pipeline (used for training and for classifying new examples)
 def build_model(info, k):
     """Pipeline = data preparation + kNN.
 
@@ -106,11 +97,7 @@ def build_model(info, k):
         ("knn", KNeighborsClassifier(n_neighbors=k)),
     ])
 
-
-# ---------------------------------------------------------------------------
-# 3. Validation of user input. Each function returns a list of error messages
-#    (an empty list means everything is OK).
-# ---------------------------------------------------------------------------
+## Validation functions for the configuration of the experiments
 def validate_split(train_pct, test_pct):
     errors = []
     if train_pct + test_pct != 100:
@@ -165,10 +152,7 @@ def describe_config(config):
         lines.append(f"  Experiment {i}: k = {k}")
     return "\n".join(lines)
 
-
-# ---------------------------------------------------------------------------
-# 4. Run the experiments
-# ---------------------------------------------------------------------------
+### running the experiments and collecting the results
 def run_experiments(df, info, config):
     """Train and evaluate one kNN model per k, all with the SAME evaluation setup.
 
@@ -258,9 +242,7 @@ def clean_filename(name):
     return safe
 
 
-# ---------------------------------------------------------------------------
-# 5. Classify new, unseen examples
-# ---------------------------------------------------------------------------
+### classifying new examples (after training the model)
 def check_new_examples(new_df, df, info):
     """Check a table of new examples before classifying. Returns (clean_table, errors)."""
     errors = []
