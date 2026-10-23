@@ -31,6 +31,8 @@ DATASETS = {
             "temp_min": "Minimum temperature (°C)",
             "wind": "Wind (m/s)",
         },
+        # Real data: all values are realistic, so no rows are removed
+        "valid_ranges": {},
     },
     "Weather Type (mixed)": {
         "file": "weather_classification_data.csv",
@@ -45,6 +47,14 @@ DATASETS = {
             "Wind Speed": "Wind speed (km/h)",
             "Atmospheric Pressure": "Atmospheric pressure (hPa)",
         },
+        # Synthetic data contains physically impossible values. Rows outside these
+        # ranges are removed when the dataset is loaded (see remove_impossible_rows).
+        "valid_ranges": {
+            "Humidity": (0, 100),              # a percentage
+            "Precipitation (%)": (0, 100),     # a percentage
+            "Temperature": (-90, 60),          # world records: -89.2 °C and 56.7 °C
+            "Atmospheric Pressure": (870, 1085),  # world records at sea level, in hPa
+        },
     },
 }
 
@@ -54,9 +64,21 @@ def features_of(info):
     return info["numerical"] + info["categorical"]
 
 
-def load_dataset(name):
-    """Read the CSV of a dataset and keep only the columns we use.
+def remove_impossible_rows(df, info):
+    """Remove rows with values outside the physically possible ranges of the dataset.
 
+    Returns (clean_df, number_of_removed_rows).
+    """
+    keep = pd.Series(True, index=df.index)
+    for column, (low, high) in info.get("valid_ranges", {}).items():
+        keep &= df[column].between(low, high)
+    return df[keep].reset_index(drop=True), int((~keep).sum())
+
+
+def load_dataset(name):
+    """Read the CSV of a dataset, keep only the columns we use and remove impossible rows.
+
+    Returns (df, number_of_removed_rows).
     Raises FileNotFoundError / KeyError with a clear message if something is wrong.
     """
     info = DATASETS[name]
@@ -67,7 +89,8 @@ def load_dataset(name):
     missing = [c for c in features_of(info) + [info["target"]] if c not in df.columns]
     if missing:
         raise KeyError(f"The file is missing these columns: {missing}")
-    return df[features_of(info) + [info["target"]]]
+    df = df[features_of(info) + [info["target"]]]
+    return remove_impossible_rows(df, info)
 
 
 def feature_types(df, info):
@@ -257,6 +280,10 @@ def check_new_examples(new_df, df, info):
         clean[column] = pd.to_numeric(clean[column], errors="coerce")
         if clean[column].isna().any():
             errors.append(f"Column '{column}' must contain numbers only (empty or text values found).")
+    for column, (low, high) in info.get("valid_ranges", {}).items():
+        outside = ~clean[column].between(low, high) & clean[column].notna()
+        if outside.any():
+            errors.append(f"Column '{column}' has impossible values (allowed range {low}–{high}).")
     for column in info["categorical"]:
         known = set(df[column].unique())
         unknown = set(clean[column].astype(str)) - known
