@@ -10,7 +10,7 @@ st.caption(DATASETS[name]["description"])
 
 if st.button("Load dataset", type="primary"):
     try:
-        df = load_dataset(name)
+        df, removed = load_dataset(name)
     except (FileNotFoundError, KeyError) as error:
         st.error(f"Could not load the dataset: {error}")
     else:
@@ -20,6 +20,7 @@ if st.button("Load dataset", type="primary"):
             st.session_state.pop("results", None)
         st.session_state["dataset"] = name
         st.session_state["df"] = df
+        st.session_state["removed_rows"] = removed
 
 if "df" not in st.session_state:
     st.info("No dataset loaded yet. Choose one above and press **Load dataset**.")
@@ -31,6 +32,13 @@ info = DATASETS[st.session_state["dataset"]]
 target = info["target"]
 
 st.success(f"✅ Dataset **{st.session_state['dataset']}** loaded correctly.")
+
+removed = st.session_state.get("removed_rows", 0)
+if removed:
+    total = len(df) + removed
+    ranges = ", ".join(f"{col}: {low}–{high}" for col, (low, high) in info["valid_ranges"].items())
+    st.info(f"🧹 **{removed:,} of {total:,} rows ({removed / total:.1%})** had physically impossible "
+            f"values and were removed before training. Valid ranges: {ranges}.")
 
 st.subheader("First 10 rows")
 st.dataframe(df.head(10))
